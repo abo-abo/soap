@@ -101,10 +101,15 @@
                     (looking-back "char\\|int\\|double\\|void")))
            (insert op))
 
-          ((and (string= op "/")
-                (or (looking-back "\\.")
-                    (looking-back "^#.*")))
-           (insert op))
+          ((string= op "/")
+           (cond ((or (looking-back "\\.")
+                      (looking-back "^#.*"))
+                  (insert op))
+                 ((and (looking-back "^ *")
+                       (memq major-mode '(c++-mode c-mode)))
+                  (insert "// "))
+                 (t
+                  (soap-default-action op))))
 
           ((and (string= op "%")
                 (looking-back "[ \t]+"))
