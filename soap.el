@@ -62,7 +62,8 @@
         (insert op)
       (insert " " op)))
   (delete-horizontal-space t)
-  (insert " "))
+  (unless (eq (char-after) ?\ )
+    (insert " ")))
 
 (defun soap-command ()
   "Similar to `self-insert-command', except handles whitespace."
