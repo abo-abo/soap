@@ -95,12 +95,17 @@
               (insert op))
              (t (soap-default-action op))))
 
-          ((and (string= op "*")
-                (or (looking-back "(\\|[\t :.]+")
-                    (looking-at ">")
-                    (looking-back "^\\sw+")
-                    (looking-back "char\\|int\\|double\\|void")))
-           (insert op))
+          ((string= op "*")
+           (cond ((lispy-after-string-p " * ")
+                  (delete-char -3)
+                  (insert "**"))
+                 ((or (looking-back "(\\|[\t :.]+")
+                      (looking-at ">")
+                      (looking-back "^\\sw+")
+                      (looking-back "char\\|int\\|double\\|void"))
+                  (insert op))
+                 (t
+                  (soap-default-action op))))
 
           ((string= op "/")
            (cond ((or (looking-back "\\.")
