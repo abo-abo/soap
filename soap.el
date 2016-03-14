@@ -65,13 +65,14 @@
   (unless (eq (char-after) ?\ )
     (insert " ")))
 
-(defun soap-command ()
+(defun soap-command (&optional arg)
   "Similar to `self-insert-command', except handles whitespace."
-  (interactive)
+  (interactive "p")
+  (setq arg (or arg 1))
   (let ((op (this-command-keys)))
     (cond ((and (soap-in-string-or-comment-p)
                 (member op (list "+" "-" "*" "/" "%" "&" "|")))
-           (insert op))
+           (self-insert-command arg))
 
           ((string= op "+")
            (cond
@@ -91,7 +92,7 @@
               (insert op))
              ((looking-back "\\s-\\|=\\|-\\|this\\|(\\|\\([0-9.]+e\\)")
               (insert op))
-             ((looking-back "[[]")
+             ((looking-back "[:[]")
               (insert op))
              (t (soap-default-action op))))
 
@@ -135,16 +136,28 @@
                (insert op)
              (insert ", ")))
 
+          ((string= op ":")
+           (insert ": "))
+
           ((and (string= op ">")
                 (looking-back "\\(?:this\\)?\\(-\\| \\- \\)"))
            (delete-region (match-beginning 1)
                           (match-end 1))
            (insert "->"))
 
-          ((and (string= op "=") (looking-back "!"))
-           (backward-delete-char 1)
-           (insert " != "))
-
+          ((string= op "=")
+           (cond ((looking-back "!")
+                  (backward-delete-char 1)
+                  (insert "!= "))
+                 ((looking-back "<")
+                  (delete-char -1)
+                  (insert " <= "))
+                 ((looking-back "\\sw\\( ?\\+ ?\\)")
+                  (delete-region (match-beginning 1)
+                                 (match-end 1))
+                  (insert " += "))
+                 (t
+                  (soap-default-action op))))
           (t
            (soap-default-action op)))))
 
