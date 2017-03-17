@@ -124,9 +124,10 @@
 
           ((string= op "&")
            (if (looking-back "&")
-               (progn (backward-delete-char 1)
-                      (insert "&& "))
-             (unless (looking-back " \\|(")
+               (progn
+                 (backward-delete-char 1)
+                 (insert "&& "))
+             (unless (looking-back " \\|(\\|\\[")
                (insert " "))
              (insert "&")))
 
@@ -156,6 +157,8 @@
                   (delete-region (match-beginning 1)
                                  (match-end 1))
                   (insert " += "))
+                 ((looking-back "\\[")
+                  (insert op))
                  (t
                   (soap-default-action op))))
           (t
