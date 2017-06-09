@@ -65,6 +65,27 @@
   (unless (eq (char-after) ?\ )
     (insert " ")))
 
+(defun soap-op-> ()
+  (interactive)
+  (cond ((looking-back "\\(?:this\\)?\\(-\\| \\- \\)")
+         (delete-region (match-beginning 1)
+                        (match-end 1))
+         (insert "->"))
+        ((eq major-mode 'sml-mode)
+         (cond ((looking-back ":")
+                (insert "> "))
+               ((looking-back "- ")
+                (delete-char -1)
+                (insert "> "))
+               (t
+                (soap-default-action ">"))))
+        ((looking-back "\\(?:this\\)?\\(-\\| \\- \\)")
+         (delete-region (match-beginning 1)
+                        (match-end 1))
+         (insert "->"))
+        (t
+         (soap-default-action ">"))))
+
 (defun soap-command (&optional arg)
   "Similar to `self-insert-command', except handles whitespace."
   (interactive "p")
@@ -123,13 +144,11 @@
            (insert op))
 
           ((string= op "&")
-           (if (looking-back "&")
-               (progn
-                 (backward-delete-char 1)
-                 (insert "&& "))
-             (unless (looking-back " \\|(\\|\\[")
-               (insert " "))
-             (insert "&")))
+           (cond ((looking-back "&")
+                  (backward-delete-char 1)
+                  (insert "&& "))
+                 (t
+                  (insert "&"))))
 
           ((string= op ",")
            (if (and (looking-at "[^\n<]*>")
@@ -140,11 +159,8 @@
           ((string= op ":")
            (insert ": "))
 
-          ((and (string= op ">")
-                (looking-back "\\(?:this\\)?\\(-\\| \\- \\)"))
-           (delete-region (match-beginning 1)
-                          (match-end 1))
-           (insert "->"))
+          ((string= op ">")
+           (soap-op->))
 
           ((string= op "=")
            (cond ((looking-back "!")
