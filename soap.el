@@ -163,8 +163,9 @@
            (soap-op->))
 
           ((string= op "=")
-           (cond ((looking-back "!")
+           (cond ((looking-back "!" (line-beginning-position))
                   (backward-delete-char 1)
+                  (just-one-space)
                   (insert "!= "))
                  ((looking-back "<")
                   (delete-char -1)
