@@ -92,7 +92,7 @@
   (setq arg (or arg 1))
   (let ((op (this-command-keys)))
     (cond ((and (soap-in-string-or-comment-p)
-                (member op (list "+" "-" "*" "/" "%" "&" "|")))
+                (member op (list "+" "-" "*" "/" "%" "&" "|" "=")))
            (self-insert-command arg))
 
           ((string= op "+")
@@ -146,7 +146,7 @@
           ((string= op "&")
            (cond ((looking-back "&")
                   (backward-delete-char 1)
-                  (insert "&& "))
+                  (insert " && "))
                  (t
                   (insert "&"))))
 
