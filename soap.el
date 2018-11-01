@@ -162,6 +162,10 @@
           ((string= op ">")
            (soap-op->))
 
+          ((string= op "<")
+           (soap-default-action op)
+           (indent-for-tab-command))
+
           ((string= op "=")
            (cond ((looking-back "!" (line-beginning-position))
                   (backward-delete-char 1)
