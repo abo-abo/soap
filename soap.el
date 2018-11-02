@@ -167,21 +167,26 @@
            (indent-for-tab-command))
 
           ((string= op "=")
-           (cond ((looking-back "!" (line-beginning-position))
-                  (backward-delete-char 1)
-                  (just-one-space)
-                  (insert "!= "))
-                 ((looking-back "<")
-                  (delete-char -1)
-                  (insert " <= "))
-                 ((looking-back "\\sw\\( ?\\+ ?\\)")
-                  (delete-region (match-beginning 1)
-                                 (match-end 1))
-                  (insert " += "))
-                 ((looking-back "\\[")
-                  (insert op))
-                 (t
-                  (soap-default-action op))))
+           (cond
+             ((and (eq major-mode 'python-mode)
+                   (looking-back "[,(][\n ]*\\(\\sw\\|\\s_\\)+"))
+              ;; keyword argument in Python
+              (insert "="))
+             ((looking-back "!" (line-beginning-position))
+              (backward-delete-char 1)
+              (just-one-space)
+              (insert "!= "))
+             ((looking-back "<")
+              (delete-char -1)
+              (insert " <= "))
+             ((looking-back "\\sw\\( ?\\+ ?\\)")
+              (delete-region (match-beginning 1)
+                             (match-end 1))
+              (insert " += "))
+             ((looking-back "\\[")
+              (insert op))
+             (t
+              (soap-default-action op))))
           (t
            (soap-default-action op)))))
 
