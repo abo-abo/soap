@@ -126,6 +126,9 @@
                       (looking-back "^\\sw+")
                       (looking-back "char\\|int\\|double\\|void"))
                   (insert op))
+                 ((memq major-mode '(java-mode))
+                  (insert op))
+
                  (t
                   (soap-default-action op))))
 
