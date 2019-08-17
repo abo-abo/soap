@@ -166,9 +166,7 @@
            (soap-op->))
 
           ((string= op "<")
-           (soap-default-action op)
-           (unless (eq major-mode 'python-mode)
-             (indent-for-tab-command)))
+           (soap-default-action op))
 
           ((string= op "=")
            (cond
