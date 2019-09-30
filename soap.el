@@ -102,6 +102,8 @@
               (insert "++"))
              ((looking-back "\\s-\\|=\\|\\+\\|\\([0-9.]+e\\)")
               (insert "+"))
+             ((lispy-after-string-p "(")
+              (insert "+"))
              (t (soap-default-action op))))
 
           ((string= op "-")
