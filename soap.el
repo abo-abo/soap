@@ -95,14 +95,15 @@
                 (member op (list "+" "-" "*" "/" "%" "&" "|" "=")))
            (self-insert-command arg))
 
+          ((lispy-after-string-p "(")
+           (insert op))
+
           ((string= op "+")
            (cond
              ((looking-back " \\+ ")
               (backward-delete-char 3)
               (insert "++"))
              ((looking-back "\\s-\\|=\\|\\+\\|\\([0-9.]+e\\)")
-              (insert "+"))
-             ((lispy-after-string-p "(")
               (insert "+"))
              (t (soap-default-action op))))
 
