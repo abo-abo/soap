@@ -111,7 +111,7 @@
              ((looking-back " \\- ")
               (backward-delete-char 3)
               (insert "--"))
-             ((looking-at "[\\s-]*>")
+             ((or (looking-at "[\\s-]*>") (bolp))
               (insert op))
              ((looking-back "\\s-\\|=\\|-\\|this\\|(\\|\\([0-9.]+e\\)")
               (insert op))
