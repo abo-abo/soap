@@ -86,6 +86,16 @@
         (t
          (soap-default-action ">"))))
 
+(defun soap-after-string-p (str)
+  "Return t if the string before point is STR."
+  (string=
+   (buffer-substring
+    (max
+     (- (point) (length str))
+     (point-min))
+    (point))
+   str))
+
 (defun soap-command (&optional arg)
   "Similar to `self-insert-command', except handles whitespace."
   (interactive "p")
@@ -95,7 +105,7 @@
                 (member op (list "+" "-" "*" "/" "%" "&" "|" "=")))
            (self-insert-command arg))
 
-          ((lispy-after-string-p "(")
+          ((soap-after-string-p "(")
            (insert op))
 
           ((string= op "+")
@@ -121,7 +131,7 @@
              (t (soap-default-action op))))
 
           ((string= op "*")
-           (cond ((lispy-after-string-p " * ")
+           (cond ((soap-after-string-p " * ")
                   (delete-char -3)
                   (insert "**"))
                  ((or (looking-back "(\\|[\t :.]+")
