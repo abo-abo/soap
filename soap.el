@@ -110,9 +110,13 @@
 
           ((string= op "+")
            (cond
-             ((looking-back " \\+ ")
-              (backward-delete-char 3)
-              (insert "++"))
+             ((looking-back " ?\\+ ")
+              (if (eq major-mode 'haskell-mode)
+                  (progn
+                    (backward-delete-char 1)
+                    (insert "+ "))
+                (backward-delete-char 3)
+                (insert "++")))
              ((looking-back "\\s-\\|=\\|\\+\\|\\([0-9.]+e\\)")
               (insert "+"))
              (t (soap-default-action op))))
